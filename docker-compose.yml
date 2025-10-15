@@ -35,7 +35,7 @@ services:
       KC_HOSTNAME_STRICT: ${KC_HOSTNAME_STRICT:-false}
 
       # HTTP configuration
-      KC_HTTP_ENABLED: ${KC_HTTP_ENABLED:-false}
+      KC_HTTP_ENABLED: ${KC_HTTP_ENABLED:-true}
       KC_HTTPS_PORT: ${KC_HTTPS_PORT:-8443}
       KC_HTTPS_KEY_STORE_FILE: /opt/keycloak/conf/server.keystore
       KC_HTTPS_KEY_STORE_PASSWORD: ${KC_HTTPS_KEY_STORE_PASSWORD:-password}
