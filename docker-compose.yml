@@ -51,9 +51,8 @@ services:
 
       # JVM memory settings
       JAVA_OPTS_KC_HEAP: ${JAVA_OPTS_KC_HEAP:--XX:MaxRAMPercentage=70 -XX:InitialRAMPercentage=50}
-    ports:
-      - "8080:8080"  # HTTP port (for local access and reverse proxy)
     expose:
+      - "8080"  # HTTP port (used by Coolify/Traefik reverse proxy)
       - "9000"  # Health and metrics port
     depends_on:
       postgres:
