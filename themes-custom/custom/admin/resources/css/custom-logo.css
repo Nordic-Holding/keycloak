@@ -1,0 +1,25 @@
+/* Override admin console logo in navbar */
+
+/* Target the brand logo in the masthead - PatternFly v5 */
+.pf-v5-c-page__header-brand-link img,
+.pf-v5-c-masthead__brand img,
+.pf-v5-c-brand img,
+img.brand-image {
+    content: url('../logo.svg') !important;
+    max-height: 40px !important;
+    width: auto !important;
+}
+
+/* Fallback: Override via src attribute for dynamically loaded images */
+.pf-v5-c-page__header-brand-link,
+.pf-v5-c-masthead__brand {
+    /* Ensure the logo container has proper dimensions */
+    display: flex;
+    align-items: center;
+}
+
+/* Additional targeting for React-rendered logos */
+[data-testid="brand-link"] img,
+a[href="/"] > img {
+    content: url('../logo.svg') !important;
+}

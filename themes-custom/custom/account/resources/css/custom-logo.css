@@ -1,0 +1,16 @@
+/* Override account console logo */
+
+/* Target the brand logo in the masthead */
+.pf-v5-c-page__header-brand-link img,
+.pf-v5-c-masthead__brand img,
+.pf-v5-c-brand img {
+    content: url('../img/logo.svg') !important;
+    max-height: 40px !important;
+    width: auto !important;
+}
+
+/* Account console specific selectors */
+.logo img,
+.brand-logo img {
+    content: url('../img/logo.svg') !important;
+}

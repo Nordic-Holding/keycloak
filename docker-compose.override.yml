@@ -6,3 +6,5 @@ services:
   keycloak:
     ports:
       - "8080:8080"  # Publish Keycloak HTTP port for local browser access
+    volumes:
+      - ./themes-custom:/opt/keycloak/themes:ro  # Mount custom themes for easy development (read-only)
