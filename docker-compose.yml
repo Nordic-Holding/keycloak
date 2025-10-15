@@ -53,10 +53,10 @@ services:
 
       # JVM memory settings
       JAVA_OPTS_KC_HEAP: ${JAVA_OPTS_KC_HEAP:--XX:MaxRAMPercentage=70 -XX:InitialRAMPercentage=50}
-    ports:
-      - "${KC_HTTPS_PORT:-8443}:8443"
-      - "${KC_HTTP_PORT:-8080}:8080"
-      - "${KC_METRICS_PORT:-9000}:9000"
+    expose:
+      - "8080"  # HTTP port (used by Traefik/reverse proxy)
+      - "8443"  # HTTPS port (if HTTPS is enabled in container)
+      - "9000"  # Health and metrics port
     depends_on:
       postgres:
         condition: service_healthy
