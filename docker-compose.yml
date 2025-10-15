@@ -9,8 +9,6 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-keycloak}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - keycloak_network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-keycloak}"]
       interval: 10s
@@ -54,19 +52,14 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    networks:
-      - keycloak_network
     healthcheck:
       test:
         - CMD-SHELL
         - "exec 3<>/dev/tcp/127.0.0.1/9000; echo -e 'GET /health/ready HTTP/1.1\r\nHost: localhost:9000\r\nConnection: close\r\n\r\n' >&3;cat <&3 | grep -q '\"status\": \"UP\"' && exit 0 || exit 1"
-      interval: 5s
-      timeout: 20s
-      retries: 10
-
-networks:
-  keycloak_network:
-    driver: bridge
+      interval: 10s
+      timeout: 30s
+      retries: 18
+      start_period: 30s
 
 volumes:
   postgres_data:
