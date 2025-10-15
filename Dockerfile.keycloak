@@ -1,0 +1,42 @@
+# Multi-stage Dockerfile for production-ready Keycloak
+# This creates an optimized Keycloak image with pre-configured build options
+
+# Stage 1: Builder - Configure and build Keycloak
+FROM quay.io/keycloak/keycloak:latest AS builder
+
+# Enable health and metrics support for production monitoring
+ENV KC_HEALTH_ENABLED=true
+ENV KC_METRICS_ENABLED=true
+
+# Configure database vendor (PostgreSQL)
+ENV KC_DB=postgres
+
+WORKDIR /opt/keycloak
+
+# Generate self-signed certificate for HTTPS
+# NOTE: In production, replace this with proper certificates
+RUN keytool -genkeypair -storepass password -storetype PKCS12 \
+    -keyalg RSA -keysize 2048 \
+    -dname "CN=server" \
+    -alias server \
+    -ext "SAN:c=DNS:localhost,IP:127.0.0.1" \
+    -keystore conf/server.keystore
+
+# Build and optimize Keycloak with the configured options
+# This step significantly reduces startup time
+RUN /opt/keycloak/bin/kc.sh build
+
+# Stage 2: Runtime - Final production image
+FROM quay.io/keycloak/keycloak:latest
+
+# Copy the optimized Keycloak build from builder stage
+COPY --from=builder /opt/keycloak/ /opt/keycloak/
+
+# Set database configuration (will be overridden by environment variables)
+ENV KC_DB=postgres
+
+# Set the entrypoint to kc.sh for full command access
+ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]
+
+# Default command: start in optimized production mode
+CMD ["start", "--optimized"]
