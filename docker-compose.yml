@@ -35,10 +35,8 @@ services:
       KC_HOSTNAME_STRICT: ${KC_HOSTNAME_STRICT:-false}
 
       # HTTP configuration
+      # HTTPS/TLS is handled by reverse proxy (Coolify/Traefik)
       KC_HTTP_ENABLED: ${KC_HTTP_ENABLED:-true}
-      KC_HTTPS_PORT: ${KC_HTTPS_PORT:-8443}
-      KC_HTTPS_KEY_STORE_FILE: /opt/keycloak/conf/server.keystore
-      KC_HTTPS_KEY_STORE_PASSWORD: ${KC_HTTPS_KEY_STORE_PASSWORD:-password}
 
       # Admin user configuration
       KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN:-admin}
@@ -53,9 +51,9 @@ services:
 
       # JVM memory settings
       JAVA_OPTS_KC_HEAP: ${JAVA_OPTS_KC_HEAP:--XX:MaxRAMPercentage=70 -XX:InitialRAMPercentage=50}
+    ports:
+      - "8080:8080"  # HTTP port (for local access and reverse proxy)
     expose:
-      - "8080"  # HTTP port (used by Traefik/reverse proxy)
-      - "8443"  # HTTPS port (if HTTPS is enabled in container)
       - "9000"  # Health and metrics port
     depends_on:
       postgres:

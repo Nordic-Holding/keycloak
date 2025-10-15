@@ -13,20 +13,9 @@ ENV KC_DB=postgres
 
 WORKDIR /opt/keycloak
 
-# Generate self-signed certificate for HTTPS
-# NOTE: Only used when KC_HTTP_ENABLED=false (direct HTTPS mode)
-# When deployed behind a reverse proxy (Traefik, Nginx), the proxy handles SSL
-# and this certificate is not used (KC_HTTP_ENABLED=true)
-# For production with direct HTTPS, replace with proper certificates
-RUN keytool -genkeypair -storepass password -storetype PKCS12 \
-    -keyalg RSA -keysize 2048 \
-    -dname "CN=server" \
-    -alias server \
-    -ext "SAN:c=DNS:localhost,IP:127.0.0.1" \
-    -keystore conf/server.keystore
-
 # Build and optimize Keycloak with the configured options
 # This step significantly reduces startup time
+# Note: HTTPS/TLS is handled by reverse proxy (Coolify/Traefik), not directly by Keycloak
 RUN /opt/keycloak/bin/kc.sh build
 
 # Stage 2: Runtime - Final production image
