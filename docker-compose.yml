@@ -63,17 +63,12 @@ services:
     networks:
       - keycloak_network
     healthcheck:
-      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/9000 && echo -e 'GET /health/ready HTTP/1.1\\r\\nhost: 127.0.0.1:9000\\r\\nConnection: close\\r\\n\\r\\n' >&3 && cat <&3 | grep -q '200 OK'"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 60s
-    deploy:
-      resources:
-        limits:
-          memory: ${KEYCLOAK_MEMORY_LIMIT:-2G}
-        reservations:
-          memory: ${KEYCLOAK_MEMORY_RESERVATION:-1G}
+      test:
+        - CMD-SHELL
+        - "exec 3<>/dev/tcp/127.0.0.1/9000; echo -e 'GET /health/ready HTTP/1.1\r\nHost: localhost:9000\r\nConnection: close\r\n\r\n' >&3;cat <&3 | grep -q '\"status\": \"UP\"' && exit 0 || exit 1"
+      interval: 5s
+      timeout: 20s
+      retries: 10
 
 networks:
   keycloak_network:
